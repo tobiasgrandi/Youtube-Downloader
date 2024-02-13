@@ -37,7 +37,6 @@ class Download(View):
             response["title"] = f"{yt.title}.mp4"
             return response
         except Exception as e:
-            print(e)
             error_message = f'Error al descargar el archivo: {str(e)}'
             return JsonResponse({'error_message': error_message}, status=500)
 
@@ -46,6 +45,7 @@ class Download(View):
         video = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
         video_file = video.download()
 
+        # Devolver el archivo como una respuesta HTTP
         response = FileResponse(open(video_file, 'rb'), content_type='video/mp4')
         response['Content-Disposition'] = f'attachment; filename="{yt.title}.mp4"'
         response['delete_file'] = video_file
@@ -54,7 +54,7 @@ class Download(View):
     def download_audio(self, yt):
 
         audio = yt.streams.filter(mime_type="audio/mp4").order_by('abr').desc().first()
-        audio_file = audio.download()  # Suponiendo que el método download() descarga el archivo
+        audio_file = audio.download()
     
         # Devolver el archivo como una respuesta HTTP
         response = FileResponse(open(audio_file, 'rb'), content_type='audio/mp4')

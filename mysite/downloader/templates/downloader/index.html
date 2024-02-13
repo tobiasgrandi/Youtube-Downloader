@@ -6,20 +6,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Javascript -->
     <script src="{% static 'downloader/scripts.js' %}"></script>
     <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'downloader/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'downloader/styles.css' %}">
 
     <title>Download Page</title>
 </head>
 <body>
-    <h1>Descargar Video de YouTube</h1>
-    <div class="alert alert-danger" role="alert" id="error-message"></div>
-    <div class="container">
-        <div class="form-container" id="allForms"></div>
-        <button type="button" class="btn btn-primary" id="addFormBtn">Agregar Formulario</button>
-        <button type="button" class="btn btn-success" id="submitAllBtn">Descargar</button>
+    <div class="container-fluid">
+    <div class="title d-flex align-items-center justify-content-center">
+        <h1>Descargar contenido de YouTube</h1>
     </div>
-    </body>
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="error-message"></div>
+    <div class="container align-items-center">
+        <div class="form-container" id="allForms">
+
+            <div class="form-group flex-column align-items-center justify-content-center">
+                    <form id="form" class="dynamic-form">
+                        <div class="d-flex align-items-center">
+                            <i class="link-icon bi bi-link-45deg"></i>
+                            <input type="text" name="url" class="form-control" required>
+                            <div class="list-file-type align-items-center" name="file_type">
+                                <label class="file-type">
+                                    <input class="form-check-input" type="radio" name="file_type" value="audio" id="audioRadi" checked>
+                                    Audio
+                                </label>
+                                <label class="file-type">
+                                    <input class="form-check-input" type="radio" name="file_type" value="video" id="videoRadi">
+                                    Video
+                                </label>
+                            </div>
+                            <button type="button" class="trash-button btn" disabled><i class="bi bi-trash3"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <div class="buttons d-flex align-items-center justify-content-evenly text-center">
+            <button type="button" class="btn btn-primary" id="addFormBtn"><i class="bi bi-plus-square"></i>Añadir campo</button>
+            <button type="button" class="btn btn-success" id="submitAllBtn"><i class="bi bi-download"></i>Descargar</button>
+        </div>
+    </div>
+</body>
 </html>

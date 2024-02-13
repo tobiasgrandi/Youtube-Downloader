@@ -1,42 +1,53 @@
-// script.js
+//ELIMINAR FORMULARIOS
+function deleteForm(formId) {
+    const form = document.getElementById(formId);
+    console.log(formId)
+    if (form) {
+        form.remove();
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     const formContainer = document.getElementById('allForms');
     const addFormBtn = document.getElementById('addFormBtn');
     const submitAllBtn = document.getElementById('submitAllBtn');
     let formCount = 0;
-  
+
+    //AÑADIR FORMULARIOS
     addFormBtn.addEventListener('click', function() {
-      formCount++;
-      const formHtml = `
-        <div class="form-group">
-          <form id="form" class="dynamic-form">
-            <label for="url">URL del video:</label>
-            <input type="text" name="url" class="form-control" required>
-            <div class="list-file_type" name="file_type">
-              <label class="list-group-item">
-                <input class="form-check-input me-1" type="radio" name="file_type" value="audio" id="audioRadi" checked>
-                Audio
-                </label>
-                <label class="list-group-item">
-                <input class="form-check-input me-1" type="radio" name="file_type" value="video" id="videoRadi">
-                Video
-                </label>
+        formCount++;
+        const formHtml = `
+        <div class="form-group flex-column align-items-center justify-content-center" id="${formCount}">
+        <form id="form" class="dynamic-form">
+            <div class="d-flex align-items-center">
+                <i class="link-icon bi bi-link-45deg"></i>
+                <input type="text" name="url" class="form-control" required>
+                <div class="list-file-type" name="file_type">
+                    <label class="file-type">
+                        <input class="form-check-input" type="radio" name="file_type" value="audio" id="audioRadi" checked>
+                        Audio
+                    </label>
+                    <label class="file-type">
+                        <input class="form-check-input" type="radio" name="file_type" value="video" id="videoRadi">
+                        Video
+                    </label>
                 </div>
-                </form>
+                <button type="button" class="trash-button btn" onclick="deleteForm('${formCount}')"><i class="bi bi-trash3"></i></button>
                 </div>
+        </form>
+        </div>
                 `;
                 formContainer.insertAdjacentHTML('beforeend', formHtml);
             });
-            
-    // Función para enviar el formulario al backend
+
+    //Obtener cookies para el csrftoken
     function getCookie(name) {
         const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
         return cookieValue ? cookieValue.pop() : '';
     }
 
+    //ELIMINAR ARCHIVOS DEL SERVIDOR
     function removeFileFromServer(deleteFile) {
-        // Hacer una solicitud al backend para eliminar el archivo del servidor
         console.log(deleteFile)
         const requestUrl = '/downloader/';
         const csrftoken = getCookie('csrftoken');
@@ -61,6 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+
+    //ENVIO DE FORMULARIOS AL BACKEND
     submitAllBtn.addEventListener('click', function() {
         const forms = document.querySelectorAll('form');
 
@@ -84,11 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!response.ok) {
                     return response.json()
                 }
-                console.log("rayos")
                 return response.blob();
             })
             .then(data => {
-                console.log(data.error_message)
+
                 if (data.error_message){ //Manejo el error, aquí data es un JSON
                     let errorDiv = document.getElementById('error-message');
                     errorDiv.innerText = data.error_message;
@@ -105,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     link.download = responseHeaders.get('title');
                     link.click();
 
+                    //Una vez que el archivo se envió al usuario, se elimina del servidor
                     URL.revokeObjectURL(blobUrl);
                     const fileDelete = responseHeaders.get('delete_file')
                     removeFileFromServer(fileDelete);
@@ -112,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             })
             .catch(error => {
-
+                console.log("Ha ocurrido un error inesperado")
             });
 
             });
