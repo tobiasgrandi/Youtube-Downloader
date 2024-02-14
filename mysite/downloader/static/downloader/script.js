@@ -1,10 +1,51 @@
+//Obtener cookies para el csrftoken
+function getCookie(name) {
+    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return cookieValue ? cookieValue.pop() : '';
+}
+
+
 //ELIMINAR FORMULARIOS
 function deleteForm(formId) {
     const form = document.getElementById(formId);
-    console.log(formId)
     if (form) {
         form.remove();
     }
+}
+
+
+function getFileInfo(divFileInfoId, inputId) {
+    const div = document.getElementById(divFileInfoId);
+    const input = document.getElementById(inputId);
+    const urlFile = input.value;
+    const csrftoken = getCookie('csrftoken');
+    url = '/downloader/'
+
+    console.log(div)
+    div.style.display = 'none';
+    
+    data = {
+        'url_file': urlFile,
+    }
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la solicitud de información.');
+        }
+        return response.json()
+    })
+    .then(response => {
+        div.innerText = response['title']
+        div.style.display = 'block'; 
+    })
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -13,8 +54,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitAllBtn = document.getElementById('submitAllBtn');
     let formCount = 0;
 
+
     //AÑADIR FORMULARIOS
     addFormBtn.addEventListener('click', function() {
+        console.log("Asdasdasd")
         formCount++;
         const formHtml = `
         <div class="form-group flex-column align-items-center justify-content-center" id="${formCount}">
@@ -40,26 +83,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 formContainer.insertAdjacentHTML('beforeend', formHtml);
             });
 
-    //Obtener cookies para el csrftoken
-    function getCookie(name) {
-        const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-        return cookieValue ? cookieValue.pop() : '';
-    }
 
     //ELIMINAR ARCHIVOS DEL SERVIDOR
     function removeFileFromServer(deleteFile) {
-        console.log(deleteFile)
         const requestUrl = '/downloader/';
         const csrftoken = getCookie('csrftoken');
-        const formData = new FormData();
-        formData.append("fileToDelete", deleteFile)
+        const data = {
+            'fileToDelete': deleteFile
+        };
 
         fetch(requestUrl, {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
+                'Content-Type': 'application/json',
                 'X-CSRFToken': csrftoken 
             },
-            body: formData
+            body: JSON.stringify(data)
         })
         .then(response => {
             if (!response.ok) {
@@ -85,12 +124,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         forms.forEach(form => {
             const formData = new FormData(form);
+            data = {
+                'url': formData.get('url'),
+                'file_type': formData.get('file_type')
+            };
             fetch(requestUrl, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': csrftoken 
                 },
-                body: formData
+                body: JSON.stringify(data)
             })
             .then(response => {
                 responseHeaders = response.headers
@@ -119,8 +162,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     //Una vez que el archivo se envió al usuario, se elimina del servidor
                     URL.revokeObjectURL(blobUrl);
-                    const fileDelete = responseHeaders.get('delete_file')
-                    removeFileFromServer(fileDelete);
+                    const deleteFile = responseHeaders.get('delete_file')
+                    removeFileFromServer(deleteFile);
                 }
 
             })
