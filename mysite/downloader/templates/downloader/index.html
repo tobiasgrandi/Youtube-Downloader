@@ -15,22 +15,20 @@
     <title>Download Page</title>
 </head>
 <body>
-    <div class="container-fluid">
-    <div class="title d-flex align-items-center justify-content-center">
-        <h1>Descargar contenido de YouTube</h1>
-    </div>
+
+    <div class="title">
+        <i class="bi bi-youtube"></i>
     </div>
 
     <div class="alert alert-danger" role="alert" id="error-message"></div>
-    <div class="container align-items-center">
+    <div class="container">
         <div class="form-container" id="allForms">
-
-            <div class="form-group flex-column align-items-center justify-content-center">
+            <div class="form-group">
                     <form id="form" class="dynamic-form">
                         <div class="file-info" id="divFileInfo_0"></div>
                         <div class="d-flex align-items-center">
                             <i class="link-icon bi bi-link-45deg"></i>
-                            <input type="text" name="url" class="form-control" id="urlFile_0" onchange="getFileInfo('divFileInfo_0', 'urlFile_0')" required>
+                            <input type="text" name="url" class="form-control" id="urlFile_0" oninput="getFileInfo('divFileInfo_0', 'urlFile_0')" required>
                             <div class="list-file-type align-items-center" name="file_type">
                                 <label class="file-type">
                                     <input class="form-check-input" type="radio" name="file_type" value="audio" id="audioRadi" checked>
@@ -46,7 +44,7 @@
                     </form>
                 </div>
             </div>
-        <div class="buttons d-flex align-items-center justify-content-evenly text-center">
+        <div class="buttons d-flex justify-content-evenly align-items-evenly">
             <button type="button" class="btn btn-primary" id="addFormBtn"><i class="bi bi-plus-square"></i>Añadir campo</button>
             <button type="button" class="btn btn-success" id="submitAllBtn"><i class="bi bi-download"></i>Descargar</button>
         </div>

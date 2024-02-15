@@ -2,15 +2,43 @@
     display: none;
 }
 
+body {
+	width: 100%;
+}
+
 .title{
+	display: inline-block;
 	text-align: center;
+	font-size: 150px;
+	color: #c4302b;
+	width: 100%;
+}
+
+.title i {
+	width: 100%;
 }
 
 /* Forms */
 
 .file-info{
-	display: none;
+	visibility: hidden;
+	opacity: 0;
+	height: 0;
+	padding: 0;
+}
+
+.file-info-show {
+	visibility: visible !important;
+	background-color: #c4302b;
 	margin-left: 2.5rem;
+	padding: 5px;
+	border-radius: 5%;
+	white-space: nowrap;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	opacity: 1;
+	transition: opacity 1s ease-in;
+	max-width: fit-content;
 }
 
 .link-icon{
@@ -38,6 +66,7 @@
 
 
 /* Bottom buttons */
+
 .buttons button{
 	text-align: center;
 	display: flex;
@@ -45,6 +74,10 @@
 	font-size: 1.2rem;
 	font-weight: bold;
 	padding: 5px;
+}
+
+#submitAllBtn {
+	margin-right: 3rem;
 }
 
 .buttons i{
@@ -55,10 +88,35 @@
 /* Responsive */
 @media screen and (max-width: 767px){
 	.form-group{
-		width: 500px;
+		display: inline;
+		width: 100%;
+	}
+
+	.dynamic-form{
+		display: flex;
+		flex-wrap: wrap;
 	}
 
 	.buttons button {
 		font-size: 1rem;
 	}
+
+	#submitAllBtn {
+		margin-right: 5.5rem;
+	}
+}
+
+@media screen and (max-width: 575px) {
+	.buttons {
+		display: block !important;
+		padding-left: 2.5rem;
+	}
+
+	#submitAllBtn {
+		margin-top: 5px;
+	}
+}
+
+@media screen and (max-width: 992px) {
+	
 }

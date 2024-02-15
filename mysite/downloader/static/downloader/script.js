@@ -4,7 +4,6 @@ function getCookie(name) {
     return cookieValue ? cookieValue.pop() : '';
 }
 
-
 //ELIMINAR FORMULARIOS
 function deleteForm(formId) {
     const form = document.getElementById(formId);
@@ -13,16 +12,16 @@ function deleteForm(formId) {
     }
 }
 
-
+//AGREGAR INFO SOBRE EL LINK PROPORCIONADO
 function getFileInfo(divFileInfoId, inputId) {
     const div = document.getElementById(divFileInfoId);
     const input = document.getElementById(inputId);
-    const urlFile = input.value;
     const csrftoken = getCookie('csrftoken');
     url = '/downloader/'
-
-    console.log(div)
-    div.style.display = 'none';
+    
+    const urlFile = input.value;
+    div.classList.remove('file-info-show')
+    div.classList.add('file-info')
     
     data = {
         'url_file': urlFile,
@@ -44,7 +43,8 @@ function getFileInfo(divFileInfoId, inputId) {
     })
     .then(response => {
         div.innerText = response['title']
-        div.style.display = 'block'; 
+        div.classList.remove('file-info')
+        div.classList.add('file-info-show')
     })
 }
 
@@ -57,14 +57,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //AÑADIR FORMULARIOS
     addFormBtn.addEventListener('click', function() {
-        console.log("Asdasdasd")
         formCount++;
+        const divId = `divFileInfo_${formCount}`;
+        const inputId = `urlFile_${formCount}`
         const formHtml = `
-        <div class="form-group flex-column align-items-center justify-content-center" id="${formCount}">
+        <div class="form-group" id="${formCount}">
         <form id="form" class="dynamic-form">
+            <div class="file-info" id="${divId}"></div>
             <div class="d-flex align-items-center">
                 <i class="link-icon bi bi-link-45deg"></i>
-                <input type="text" name="url" class="form-control" required>
+                <input type="text" name="url" class="form-control" id="${inputId}" oninput="getFileInfo('${divId}', '${inputId}')" required>
                 <div class="list-file-type" name="file_type">
                     <label class="file-type">
                         <input class="form-check-input" type="radio" name="file_type" value="audio" id="audioRadi" checked>
