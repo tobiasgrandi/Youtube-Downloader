@@ -11,6 +11,10 @@
     <script src="{% static 'downloader/script.js' %}"></script>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'downloader/styles.css' %}">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Mono:wght@300&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
     <title>Download Page</title>
 </head>
@@ -20,33 +24,34 @@
         <i class="bi bi-youtube"></i>
     </div>
 
-    <div class="alert alert-danger" role="alert" id="error-message"></div>
     <div class="container">
         <div class="form-container" id="allForms">
             <div class="form-group">
                     <form id="form" class="dynamic-form">
                         <div class="file-info" id="divFileInfo_0"></div>
+                        <div class="alert alert-danger" role="alert" id="errorMessage_0"></div>
                         <div class="d-flex align-items-center">
                             <i class="link-icon bi bi-link-45deg"></i>
                             <input type="text" name="url" class="form-control" id="urlFile_0" oninput="getFileInfo('divFileInfo_0', 'urlFile_0')" required>
-                            <div class="list-file-type align-items-center" name="file_type">
-                                <label class="file-type">
-                                    <input class="form-check-input" type="radio" name="file_type" value="audio" id="audioRadi" checked>
-                                    Audio
+                            <div class="list-file-type" name="file_type">
+                                <label class="file-type d-inline-flex align-items-center">
+                                    <input class="form-check-input" type="radio" name="file_type" value="audio" id="audioRadi_0" onchange="changeFileIcon('audioRadi_0')" checked>
+                                    <i class="bi bi-file-music-fill"></i>
                                 </label>
-                                <label class="file-type">
-                                    <input class="form-check-input" type="radio" name="file_type" value="video" id="videoRadi">
-                                    Video
+                                <label class="file-type d-inline-flex align-items-center">
+                                    <input class="form-check-input" type="radio" name="file_type" value="video" id="videoRadi_0" onchange="changeFileIcon('videoRadi_0')">
+                                    <i class="bi bi-camera-reels"></i>
                                 </label>
                             </div>
-                            <button type="button" class="trash-button btn" disabled><i class="bi bi-trash3"></i></button>
+                            <button type="button" class="trash-button btn" id="trashButton_0" disabled><i class="bi bi-trash3"></i></button>
+                            <div class="spinner-border text-danger" id="loadSpinner_0" role="status"></div>
                         </div>
                     </form>
                 </div>
             </div>
         <div class="buttons d-flex justify-content-evenly align-items-evenly">
             <button type="button" class="btn btn-primary" id="addFormBtn"><i class="bi bi-plus-square"></i>Añadir campo</button>
-            <button type="button" class="btn btn-success" id="submitAllBtn"><i class="bi bi-download"></i>Descargar</button>
+            <button type="button" class="btn btn-success" id="submitAllBtn" onclick="sendForms()"><i class="bi bi-download"></i>Descargar</button>
         </div>
     </div>
 </body>
