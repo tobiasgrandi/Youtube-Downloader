@@ -159,7 +159,6 @@ function getFileInfo(divFileInfoId, inputId) {
     
     numDivId = divFileInfoId.split("_")[1];
     errorDivId = `errorMessage_${numDivId}`
-    console.log(errorDivId)
     changeErrorStatus(errorDivId)
 
     data = {
@@ -233,14 +232,12 @@ async function sendForms () {
                     // Si la respuesta no es exitosa, rechazar la promesa con el mensaje de error
                     return response.json()
                 }
-                // Si la respuesta es exitosa, resolver la promesa
                 return response.blob()
             })
             .then(data => {
 
                 if (data.error_message){ //Manejo el error, aquí data es un JSON
                     changeErrorStatus(errorDivId, data)
-                    console.log("antes")
                     showTrashHideSpinner(form)
                     resolve()
                 }
@@ -262,7 +259,6 @@ async function sendForms () {
                 console.log("Ha ocurrido un error inesperado")
             })
             .finally(() => {
-                //changeTrashButtonAndLoadSpinner(form)
                 resolve()
             });
         })

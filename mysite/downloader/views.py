@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from pytube import YouTube
-from django.http import HttpResponse, HttpResponseServerError, JsonResponse
+from pytube import YouTube, exceptions
+from django.http import JsonResponse
 from django.views import View
 from django.http import FileResponse
 import os
@@ -41,10 +41,33 @@ class Download(View):
             
             response["title"] = f"{yt.title}.mp4"
             return response
-        except Exception as e:
-            error_message = f'Error al descargar el archivo: {str(e)}'
+        except exceptions.RegexMatchError as e:
+            error_message = f'Error al descargar el archivo: el link proporcionado es erróneo'
             return JsonResponse({'error_message': error_message}, status=500)
-
+        except exceptions.AgeRestrictedError as e:
+            error_message = f'Error al descargar el archivo: el contenido posee restricción de edad'
+            return JsonResponse({'error_message': error_message}, status=500)
+        except (exceptions.ExtractError, exceptions.HTMLParseError, exceptions.MaxRetriesExceeded, exceptions.RecordingUnavailable) as e:
+            error_message = f'Error al descargar el archivo: no fue posible descargar el contenido'
+            return JsonResponse({'error_message': error_message}, status=500)
+        except exceptions.LiveStreamError as e:
+            error_message = f'Error al descargar el archivo: el contenido es un video en vivo'
+            return JsonResponse({'error_message': error_message}, status=500)
+        except exceptions.MembersOnly as e:
+            error_message = f'Error al descargar el archivo: el contenido solo es accesible para miembros'
+            return JsonResponse({'error_message': error_message}, status=500)
+        except exceptions.VideoPrivate as e:
+            error_message = f'Error al descargar el archivo: el contenido es privado'
+            return JsonResponse({'error_message': error_message}, status=500)
+        except exceptions.VideoRegionBlocked as e:
+            error_message = f'Error al descargar el archivo: el contenido se encuentra restringido en tu región'
+            return JsonResponse({'error_message': error_message}, status=500)
+        except exceptions.VideoUnavailable as e:
+            error_message = f'Error al descargar el archivo: el contenido no se encuentra disponible'
+            return JsonResponse({'error_message': error_message}, status=500)
+        except Exception as e:
+            error_message = f'Ha ocurrido un error inesperado: {e}'
+            return JsonResponse({'error_message': error_message}, status=500)
 
 
 
